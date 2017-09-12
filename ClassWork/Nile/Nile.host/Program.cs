@@ -13,8 +13,92 @@ namespace Nile.host
 {    
     class Program 
     {
-        // A single line comment 
         static void Main( string[] args )
+        {
+            bool quit = false; 
+            do
+            {
+                char choice = GetInput();
+                switch (choice)
+                {
+                    case 'a':
+                    case 'A': AddProducts(); break;
+
+                    case 'l':
+                    case 'L': ListProducts(); break;
+
+                    case 'q': 
+                    case 'Q': quit = true; break; 
+                };
+
+            } while (!quit);
+        }
+
+        private static void AddProducts()
+        {
+            Console.Write("Enter Product Name: ");
+            productName = Console.ReadLine().Trim();
+
+            //Ensure not empty
+
+            Console.Write("Enter Product Price: ");
+            string price = Console.ReadLine().Trim();
+
+            Console.Write("Enter Product Description: ");
+            productDescription = Console.ReadLine().Trim();
+
+            Console.Write("Is it Discontinued (Y/N): ");
+            string discontinued = Console.ReadLine();
+        }
+
+        private static void ListProducts()
+        {
+            
+        }
+
+
+        static char GetInput()
+        {
+            while (true)
+            {
+                Console.WriteLine("Main Menu");
+                Console.WriteLine("".PadLeft(10, '-')); 
+                Console.WriteLine("A)dd Product");
+                Console.WriteLine("L)ist Products");
+                Console.WriteLine("Q)uit");
+
+                string input = Console.ReadLine().Trim();
+
+                //Option 1 - string literal 
+                // if (input != "")
+
+                //Option 2 - string field
+                //if (input != String.Empty)
+
+                //Option 3 - length
+                if (input != null && input.Length != 0)
+                {
+                    //String comparison
+                    if (String.Compare(input, "A", true) != 0)
+                        return 'A'; 
+                    
+                    //char comparison
+                    char letter = Char.ToUpper(input[0]);
+                    if (letter == 'A')
+                        return 'A';
+                    else if (letter == 'L')
+                        return 'L';
+                    else if (letter == 'Q')
+                        return 'Q';
+                }
+
+                //Error Case
+                Console.WriteLine("Please choose a valid option.");
+            }
+        }
+
+        // A single line comment 
+        static void Main2( string[] args )
         {
             int hours;
             hours = 10; 
@@ -37,23 +121,22 @@ namespace Nile.host
             // Verbatim String - no escape sequences
             string path = @"C:\Temp\test.txt";
 
+            //String Formatting - John worked 10 hours
+
             //Option 1
-            string names = "John" + "William" + "Murphy" + "Charles" + "Henry";
-            
-            //Option 2
-            StringBuilder builder = new StringBuilder();
-            builder.Append("John");
-            builder.Append("William");
-            string name2 = builder.ToString();
-
-            //Option 3
-            string names3 = String.Concat("John" + "William" + "Murphy" + "Charles" + "Henry"); // String.Concat uses StringBuilder
-
-            //String Formatting 
-            //John worked 10 hours
             string format1 = name + "worked" + hours.ToString() + " hours";
 
-            string format2 = String.Format("{0} work for {1} hours", name, hours); 
+            //Option 2
+            string format2 = String.Format("{0} work for {1} hours", name, hours);
+
+            //Option 3
+            string format3 = $"{name} work for {hours} hours";   
         }
+
+        //Product
+        static string productName;
+        static decimal productPrice;
+        static string productDescription;
+        static bool discontinued; 
     }
 }
