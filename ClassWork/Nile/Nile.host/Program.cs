@@ -42,18 +42,29 @@ namespace Nile.host
             //Ensure not empty
 
             Console.Write("Enter Product Price: ");
-            string price = Console.ReadLine().Trim();
+            productPrice = ReadDecimal();
 
             Console.Write("Enter Product Description: ");
             productDescription = Console.ReadLine().Trim();
 
             Console.Write("Is it Discontinued (Y/N): ");
-            string discontinued = Console.ReadLine();
+             productDiscontinued = ReadYesNO();
         }
 
         private static void ListProducts()
         {
+            //Name $prices [Discontinued]
+            //Description
+            // Option 1: 
+            //string msg = String.Format("{0}\t\t\t${1}\t\t{2}", productName, productPrice, productDiscontinued ? "[Discontinued]" : "");
             
+            // Option 2: 
+            //Console.WriteLine(String.Format("{0}\t\t\t${1}\t\t{2}", productName, productPrice, productDiscontinued ? "[Discontinued]" : ""));
+
+            // Option 3: 
+            string msg = $"{productName}\t\t\t${productPrice}\t\t{(productDiscontinued ? "[Discontinued]" : "")}";
+            Console.WriteLine(msg);
+            Console.WriteLine(productDescription);
         }
 
 
@@ -61,13 +72,14 @@ namespace Nile.host
         {
             while (true)
             {
+                Console.WriteLine();
                 Console.WriteLine("Main Menu");
                 Console.WriteLine("".PadLeft(10, '-')); 
                 Console.WriteLine("A)dd Product");
                 Console.WriteLine("L)ist Products");
                 Console.WriteLine("Q)uit");
 
-                string input = Console.ReadLine().Trim();
+                var input = Console.ReadLine().Trim();      // var is type infrancing, not Java or other, no type conversion
 
                 //Option 1 - string literal 
                 // if (input != "")
@@ -79,7 +91,7 @@ namespace Nile.host
                 if (input != null && input.Length != 0)
                 {
                     //String comparison
-                    if (String.Compare(input, "A", true) != 0)
+                    if (String.Compare(input, "A", true) == 0)
                         return 'A'; 
                     
                     //char comparison
@@ -91,7 +103,7 @@ namespace Nile.host
                     else if (letter == 'Q')
                         return 'Q';
                 }
-
+                
                 //Error Case
                 Console.WriteLine("Please choose a valid option.");
             }
@@ -133,10 +145,44 @@ namespace Nile.host
             string format3 = $"{name} work for {hours} hours";   
         }
 
+        /// <summary>Read a decimal from console</summary>
+        /// <returns>The decimal value.</returns>
+        static decimal ReadDecimal() // for other data types just change the type of the function and the variables inside the function
+        {
+            do
+            {
+                string input = Console.ReadLine();
+
+                //decimal result;
+                if (Decimal.TryParse(input, out decimal result))
+                    return result;
+            } while (true);
+        }
+
+        /// <summary>Read a bool from console</summary>
+        /// <returns>The bool value.</returns>
+        static bool ReadYesNO() 
+        {
+            do
+            {
+                string input = Console.ReadLine();
+
+                if (!String.IsNullOrEmpty(input))
+                {
+                    switch (Char.ToUpper(input[0]))
+                    {
+                        case 'Y': return true;
+                        case 'N': return false; 
+                    }
+                }
+                Console.WriteLine("Enter either Y or N");
+            } while (true);
+        }
+
         //Product
         static string productName;
         static decimal productPrice;
         static string productDescription;
-        static bool discontinued; 
+        static bool productDiscontinued; 
     }
 }
