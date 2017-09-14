@@ -67,7 +67,6 @@ namespace Nile.host
             Console.WriteLine(productDescription);
         }
 
-
         static char GetInput()
         {
             while (true)
@@ -142,7 +141,15 @@ namespace Nile.host
             string format2 = String.Format("{0} work for {1} hours", name, hours);
 
             //Option 3
-            string format3 = $"{name} work for {hours} hours";   
+            string format3 = $"{name} work for {hours} hours";
+
+            // Value Type 
+            int value1 = 10;
+            Program program = new Program();
+
+            var areEqual1 = value1 == 10;
+            var areEqual2 = program == program;
+            var areEqual3 = program == new Program(); // this is C#
         }
 
         /// <summary>Read a decimal from console</summary>
@@ -178,7 +185,29 @@ namespace Nile.host
                 Console.WriteLine("Enter either Y or N");
             } while (true);
         }
+ 
+        static string ReadString ( string errorMessage, bool allowEmpty ) 
+        {
+            // if (errorMessage == null)
+            //   errorMessage = "Enter a valid string"; 
+            
+            // null coalease
+            errorMessage = errorMessage ?? "Enter a valid string";
 
+            // null conditional 
+            errorMessage = errorMessage?.Trim(); 
+
+            do
+            {
+                string input = Console.ReadLine();
+                if (String.IsNullOrEmpty(input) && allowEmpty)
+                    return "";
+                else if (!String.IsNullOrEmpty(input))
+                    return input;
+
+                Console.WriteLine(errorMessage);
+            } while (true);
+        }
         //Product
         static string productName;
         static decimal productPrice;
