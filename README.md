@@ -1,6 +1,6 @@
-# ITSE 1430 - Introduction to C# Programming
+# 2017FL-ITSE-1430-20630: Introduction to C# Programming
 
-Course material for this class.
+This repository is for ITSE-1430-20630. 
 
 ## Help
 
