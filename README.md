@@ -2,18 +2,20 @@
 
 This repository is for ITSE-1430-20630 class. 
 
-[comment]: <> (## Help)
+<!--
+## Help
 
-[comment]: <> (The files in this folder provide assistance with getting your machine set up for this course and working with Visual Studio.)
+The files in this folder provide assistance with getting your machine set up for this course and working with Visual Studio.
 
-[comment]: <> (## Labs)
+## Labs
 
-[comment]: <> (Lab assignments will be placed in here. They are also available directly from the Assignments page in MyTCC. Sample implementations will be provided here as well after the labs have been submitted.)
+Lab assignments will be placed in here. They are also available directly from the Assignments page in MyTCC. Sample implementations will be provided here as well after the labs have been submitted.
 
-[comment]: <> (## Tools)
+## Tools
 
-[comment]: <> (The files in this folder provide some assistance with working with Visual Studio.)
+The files in this folder provide some assistance with working with Visual Studio.
 
-[comment]: <> (- .editorconfig => Provides some standard styling and naming rules for C# code.)
-[comment]: <> (- .gitignore => Provides a standard ignore file that can be used in Git repositories for C#.)
-[comment]: <> (- .vssettings => Provides a set of Visual Studio settings to make it easier to work with C# from the start.)
+- .editorconfig => Provides some standard styling and naming rules for C# code.
+- .gitignore => Provides a standard ignore file that can be used in Git repositories for C#.
+- .vssettings => Provides a set of Visual Studio settings to make it easier to work with C# from the start.
+-->
