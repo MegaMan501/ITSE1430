@@ -12,7 +12,7 @@ namespace Nile
     /// </remarks>
     public class Product
     {
-        public readonly Product None = new Product();           // set at the moment the instance is created; readonly does not cascade 
+        //public readonly Product None = new Product();           // set at the moment the instance is created; readonly does not cascade 
 
         /// <summary>Get or Set the Name</summary>
         public string Name
@@ -62,7 +62,7 @@ namespace Nile
 
         public void Foo (string name)
         {
-
+            name = "Hello"; 
         }
 
         private string _name;
