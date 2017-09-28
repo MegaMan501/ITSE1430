@@ -12,6 +12,10 @@ namespace Nile
     /// </remarks>
     public class Product
     {
+        public Product()
+        {
+            //Cross field initialization
+        }
         //public readonly Product None = new Product();           // set at the moment the instance is created; readonly does not cascade 
 
         /// <summary>Get or Set the Name</summary>
@@ -57,17 +61,34 @@ namespace Nile
             }
         }
 
-        public int ICanOnlySetIt { get; private set; }          // Limitation: the get or set need to be more private the field
-        public int ICanOnlySetIt2 { get; }
-
-        public void Foo (string name)
+        public override string ToString()
         {
-            name = "Hello"; 
+            return Name; 
         }
+
+        //public abstract string Validate2();
+
+        /// <summary> Validate the object</summary>
+        /// <returns> The error message for null.</returns>
+        public virtual string Validate()
+        {
+            // Name cannot be empty
+            if (String.IsNullOrEmpty(Name))
+                return "Name cannot be empty";
+
+            // Price >= 0
+            if (Price < 0)
+                return "Price must be >= 0";
+
+            return null; 
+        }
+        
+        //public int ICanOnlySetIt { get; private set; }          // Limitation: the get or set need to be more private the field
+        //public int ICanOnlySetIt2 { get; }
 
         private string _name;
         private string _description;
 
-        private readonly double _someValueICannotChange = 10;   // Fix at moment that there is an instance of this class; readonly does not need to inialized
+        //private readonly double _someValueICannotChange = 10;   // Fix at moment that there is an instance of this class; readonly does not need to inialized
     }
 }
