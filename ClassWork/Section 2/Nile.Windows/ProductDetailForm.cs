@@ -87,5 +87,33 @@ namespace Nile.Windows
             return 0; 
         }
 
+        private void ProductDetailForm_FormClosing( object sender, FormClosingEventArgs e )
+        {
+            // Please no
+            //var form = (Form)sender; // problem!, runtime check
+
+            // Please yes (type conversion for reference types)
+            var form = sender as Form; // Safe
+
+            // Casting for value type
+            if (sender is int)
+            {
+                var intValue2 = (int)sender;
+            };
+
+            //Pattern Matching
+            if (sender is int intValue)
+            {
+
+            };
+
+            if (MessageBox.Show(this, "Are you sure?", "Closing", MessageBoxButtons.YesNo) == DialogResult.No)
+                e.Cancel = true;
+        }
+
+        private void ProductDetailForm_FormClosed( object sender, FormClosedEventArgs e )
+        {
+
+        }
     }
 }
