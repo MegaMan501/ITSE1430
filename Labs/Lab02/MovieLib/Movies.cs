@@ -23,11 +23,6 @@ namespace MovieLib
             set { _movieTitle = value?.Trim(); }
         }
 
-        public override string ToString()
-        {
-            return MovieTitle;
-        }
-
         /// <summary> Gets or sets the Movie Description. </summary>
         public string MovieDescription
         {
@@ -47,11 +42,11 @@ namespace MovieLib
         {
             // Title cannot be empty
             if (String.IsNullOrEmpty(MovieTitle))
-                return "Name Cannot Be Empty!";
+                return "Title Cannot Be Empty!";
 
             // Length >= 0
             if (MovieLength < 0)
-                return "Price must be >= 0";
+                return "Length must be >= 0";
 
             return null; 
         }

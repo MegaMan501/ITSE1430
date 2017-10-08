@@ -35,6 +35,7 @@ namespace MovieLib.Windows
         private void OnMovieEdit( object sender, EventArgs e )
         {
             var child = new MovieDetailForm("Movie Details");
+            child.Movies = _movie; 
             if (child.ShowDialog(this) != DialogResult.OK)
                 return;
 
@@ -58,7 +59,8 @@ namespace MovieLib.Windows
 
         private void OnHelpAbout( object sender, EventArgs e )
         {
-            
+            var about = new AboutBox();
+            about.ShowDialog(this);
         }
 
         private Movies _movie; 

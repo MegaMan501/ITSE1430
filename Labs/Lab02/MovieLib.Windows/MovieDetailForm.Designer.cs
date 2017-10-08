@@ -46,7 +46,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(42, 60);
+            this.label1.Location = new System.Drawing.Point(40, 39);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(33, 13);
             this.label1.TabIndex = 0;
@@ -55,7 +55,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 89);
+            this.label2.Location = new System.Drawing.Point(7, 68);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(66, 13);
             this.label2.TabIndex = 1;
@@ -65,7 +65,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(29, 225);
+            this.label3.Location = new System.Drawing.Point(27, 171);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 2;
@@ -75,7 +75,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(254, 225);
+            this.label4.Location = new System.Drawing.Point(262, 171);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 13);
             this.label4.TabIndex = 3;
@@ -84,7 +84,7 @@
             // _btnSave
             // 
             this._btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._btnSave.Location = new System.Drawing.Point(394, 309);
+            this._btnSave.Location = new System.Drawing.Point(392, 255);
             this._btnSave.Name = "_btnSave";
             this._btnSave.Size = new System.Drawing.Size(75, 23);
             this._btnSave.TabIndex = 4;
@@ -95,7 +95,7 @@
             // _btnCancel
             // 
             this._btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._btnCancel.Location = new System.Drawing.Point(475, 309);
+            this._btnCancel.Location = new System.Drawing.Point(473, 255);
             this._btnCancel.Name = "_btnCancel";
             this._btnCancel.Size = new System.Drawing.Size(75, 23);
             this._btnCancel.TabIndex = 5;
@@ -107,7 +107,7 @@
             // 
             this._chkOwned.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this._chkOwned.AutoSize = true;
-            this._chkOwned.Location = new System.Drawing.Point(81, 263);
+            this._chkOwned.Location = new System.Drawing.Point(79, 194);
             this._chkOwned.Name = "_chkOwned";
             this._chkOwned.Size = new System.Drawing.Size(66, 17);
             this._chkOwned.TabIndex = 3;
@@ -118,7 +118,7 @@
             // 
             this._txtTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._txtTitle.Location = new System.Drawing.Point(81, 57);
+            this._txtTitle.Location = new System.Drawing.Point(79, 36);
             this._txtTitle.Name = "_txtTitle";
             this._txtTitle.Size = new System.Drawing.Size(469, 20);
             this._txtTitle.TabIndex = 0;
@@ -129,15 +129,15 @@
             this._txtDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._txtDescription.Location = new System.Drawing.Point(81, 86);
+            this._txtDescription.Location = new System.Drawing.Point(79, 65);
             this._txtDescription.Multiline = true;
             this._txtDescription.Name = "_txtDescription";
-            this._txtDescription.Size = new System.Drawing.Size(469, 130);
+            this._txtDescription.Size = new System.Drawing.Size(469, 97);
             this._txtDescription.TabIndex = 1;
             // 
             // _txtLength
             // 
-            this._txtLength.Location = new System.Drawing.Point(81, 222);
+            this._txtLength.Location = new System.Drawing.Point(79, 168);
             this._txtLength.Name = "_txtLength";
             this._txtLength.Size = new System.Drawing.Size(167, 20);
             this._txtLength.TabIndex = 2;
@@ -153,7 +153,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.ClientSize = new System.Drawing.Size(584, 361);
+            this.ClientSize = new System.Drawing.Size(584, 311);
             this.Controls.Add(this._txtLength);
             this.Controls.Add(this._txtDescription);
             this.Controls.Add(this._txtTitle);
@@ -166,7 +166,7 @@
             this.Controls.Add(this.label1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(600, 400);
+            this.MinimumSize = new System.Drawing.Size(600, 350);
             this.Name = "MovieDetailForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
