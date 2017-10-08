@@ -150,6 +150,7 @@ namespace lab01
 
             } while (true);
         }
+
         static bool ReadYesNo()
         {
             do
