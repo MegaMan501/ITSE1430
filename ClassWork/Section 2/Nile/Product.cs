@@ -66,6 +66,20 @@ namespace Nile
             return Name; 
         }
 
+        // Size of the product // Copy an array // waste of memory, don't do it
+        public int[] Sizes
+        {
+            get 
+            {
+                var copySizes = new int[_sizes.Length];
+                Array.Copy(_sizes, copySizes, _sizes.Length);
+
+                return copySizes; 
+            }
+        }
+
+        private int[] _sizes = new int[4];
+
         //public abstract string Validate2();
 
         /// <summary> Validate the object</summary>
