@@ -14,7 +14,9 @@ namespace Nile.Windows
         {
             base.OnLoad(e);
 
-            var products = _database.GetAll();
+            foreach (var product in _database.GetAll())
+                _listProducts.Items.Add(product);
+           
         }
 
         //private int FindAvailableElement()
@@ -49,6 +51,7 @@ namespace Nile.Windows
 
             //TODO: Save product
             _database.Add(child.Product);
+            UpdateList();
         }
 
         //private int FindFirstProduct()
@@ -62,6 +65,19 @@ namespace Nile.Windows
         //    return -1;
         //}
 
+        private Product GetSelectedProduct ()
+        {
+            return _listProducts.SelectedItem as Product;       // casting a reference type
+        }
+
+        private void UpdateList()
+        {
+            _listProducts.Items.Clear();
+
+            foreach (var product in _database.GetAll())
+                _listProducts.Items.Add(product);
+        }
+
         private void OnProductEdit( object sender, EventArgs e )
         {
             // Are there any products 
@@ -72,7 +88,12 @@ namespace Nile.Windows
             //    return; 
             //};
 
-            var product = _database.Get();
+            var product = GetSelectedProduct();
+            if (product == null)
+            {
+                MessageBox.Show("No product available.");
+                return;
+            };
 
             var child = new ProductDetailForm("Product Details");
             child.Product = product; 
@@ -81,6 +102,7 @@ namespace Nile.Windows
 
             //TODO: Save product
             _database.Update(child.Product);
+            UpdateList();
         }
 
         private void OnProductDelete( object sender, EventArgs e )
@@ -90,7 +112,9 @@ namespace Nile.Windows
             //    return;
 
             //var product = _products[index];
-            var product = _database.Get();
+            var product = GetSelectedProduct();
+            if (product == null)
+                return;
 
             // Confirm
             if (MessageBox.Show(this, $"Are you sure you want to delete '{product.Name}'?",
@@ -98,7 +122,8 @@ namespace Nile.Windows
                 return;
 
             //TODO: Delete product
-            _database.Remove(product);
+            _database.Remove(product.Id);
+            UpdateList();
         }
 
         private void OnHelpAbout( object sender, EventArgs e )

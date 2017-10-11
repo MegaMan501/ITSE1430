@@ -18,6 +18,8 @@ namespace Nile
         }
         //public readonly Product None = new Product();           // set at the moment the instance is created; readonly does not cascade 
 
+        /// <summary> Gets or sets the unique identifier </summary>
+        public int Id { get; set; }
         /// <summary>Get or Set the Name</summary>
         public string Name
         {
