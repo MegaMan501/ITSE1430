@@ -6,61 +6,68 @@ using System.Threading.Tasks;
 
 namespace Nile
 {
-    /// <summary> Base class for public database </summary>
+    /// <summary>Base class for product database.</summary>
     public class ProductDatabase
     {
         public ProductDatabase()
         {
-            var product = new Product();
-            product.Name = "Blu Phone X";
-            product.Price = 250;
-            Add(product);
+            // Object initializers syntax
+            //_products.Add(new Product() { Id = 1, Name = "Galaxy S7", Price = 650 });
+            //_products.Add(new Product() { Id = 2, Name = "Samsung Note 7", Price = 150, IsDiscontinued = true });
+            //_products.Add(new Product() { Id = 3, Name = "Windows Phone", Price = 100 });
+            //_products.Add(new Product() { Id = 4, Name = "iPhone X", Price = 1900, IsDiscontinued = true });
 
-            product = new Product();
-            product.Name = "Iphone X";
-            product.Price = 1000;
-            product.IsDiscontinued = true;
-            Add(product);
+            // Collection initializers syntax
+            //_products = new List<Product> {
+            //    new Product() { Id = 1, Name = "Galaxy S7", Price = 650 },
+            //    new Product() { Id = 2, Name = "Samsung Note 7", Price = 150, IsDiscontinued = true },
+            //    new Product() { Id = 3, Name = "Windows Phone", Price = 100 },
+            //    new Product() { Id = 4, Name = "iPhone X", Price = 1900, IsDiscontinued = true }
+            //};
 
-            product = new Product();
-            product.Name = "Windows Phone";
-            product.Price = 650;
-            Add(product);
+            // Collection initializers with arrays
+            _products.AddRange(new [] {
+                new Product() { Id = 1, Name = "Galaxy S7", Price = 650 },
+                new Product() { Id = 2, Name = "Samsung Note 7", Price = 150, IsDiscontinued = true },
+                new Product() { Id = 3, Name = "Windows Phone", Price = 100 },
+                new Product() { Id = 4, Name = "iPhone X", Price = 1900, IsDiscontinued = true }
+            });
 
-            product = new Product();
-            product.Name = "Samsung Galaxy";
-            product.Price = 300;
-            product.IsDiscontinued = false;
-            Add(product);
+            _nextId = _products.Count + 1;
         }
 
-        /// <summary> Adds a product </summary>
-        /// <param name="product"> The product </param>
-        /// <returns> The added product </returns>
-        public Product Add ( Product product)
+        /// <summary>Adds a product.</summary>
+        /// <param name="product">The product to add.</param>
+        /// <returns>The added product.</returns>
+        public Product Add( Product product )
         {
-            // TODO: Validate
+            //TODO: Validate
             if (product == null)
                 return null;
-            if (!String.IsNullOrEmpty(product.Validate()))
-                return null;
 
-            // Emulate database by storing copy
+            // Using IValidatableObject
+            if(!ObjectValidator.TryValidate(product, out var errors))
+                return null; 
+
+            //if (!String.IsNullOrEmpty(product.Validate()))
+            //    return null;
+
+            //Emulate database by storing copy
             var newProduct = CopyProduct(product);
             _products.Add(newProduct);
-            newProduct.Id = _nextId++; 
+            newProduct.Id = _nextId++;
 
             return CopyProduct(newProduct);
-            
-            //var item = _list[0]; 
+
+            //var item = _list[0];
 
             //TODO: Implement Add
-            //return null; 
+            //return product;
         }
 
-        /// <summary> Get a specific product 
-        /// <returns>The product, if it exists </returns>
-        public Product Get ( int id )
+        /// <summary>Get a specific product.</summary>
+        /// <returns>The product, if it exists.</returns>
+        public Product Get( int id )
         {
             //TODO: Validate
             if (id <= 0)
@@ -68,20 +75,20 @@ namespace Nile
 
             var product = FindProduct(id);
 
-            return (product != null) ? CopyProduct(product) : null ; 
+            return (product != null) ? CopyProduct(product) : null;
         }
 
-        /// <summary> Gets all products </summary>
-        /// <returns> The products</returns>
+        /// <summary>Gets all products.</summary>
+        /// <returns>The products.</returns>
         public Product[] GetAll()
         {
             var items = new Product[_products.Count];
             var index = 0;
             foreach (var product in _products)
-                items[index++] = (CopyProduct(product));
+                items[index++] = CopyProduct(product);
 
             return items;
-            //// How many products
+            //How many products?
             //var count = 0;
             //foreach (var product in _products)
             //{
@@ -90,20 +97,21 @@ namespace Nile
             //};
 
             //var items = new Product[count];
-            //var index = 0; 
+            //var index = 0;
 
             //foreach (var product in _products)
             //{
             //    if (product != null)
+            //        //product = new Product();
             //        items[index++] = CopyProduct(product);
             //};
 
             //return items;
         }
 
-        /// <summary> Removes the product </summary>
-        /// <param name="product"> The product to remove</param>
-        public void Remove(int id)
+        /// <summary>Removes the product.</summary>
+        /// <param name="product">The product to remove.</param>
+        public void Remove( int id )
         {
             //TODO: Validate
             if (id <= 0)
@@ -112,32 +120,34 @@ namespace Nile
             var product = FindProduct(id);
             if (product != null)
                 _products.Remove(product);
-            
 
             //if (_list[index].Name == product.Name)
             //{
             //    _list.RemoveAt(index);
             //    break;
-            //};
+            //};        
         }
 
-        /// <summary> Updates a product </summary>
-        /// <param name="product">The product to update</param>
-        /// <returns>The updated product</returns>
-        public Product Update ( Product product)
+        /// <summary>Updates a product.</summary>
+        /// <param name="product">The product to update.</param>
+        /// <returns>The updated product.</returns>
+        public Product Update( Product product )
         {
-            // TODO: Validate
+            //TODO: Validate
             if (product == null)
                 return null;
-            if (!String.IsNullOrEmpty(product.Validate()))
+            // Using IValidatableObject
+            if (!ObjectValidator.TryValidate(product, out var errors))
                 return null;
+            //if (!String.IsNullOrEmpty(product.Validate()))
+            //    return null;
 
-            // Get exisiting product
+            //Get existing product
             var existing = FindProduct(product.Id);
             if (existing == null)
                 return null;
-           
-            // Replace
+
+            //Replace 
             _products.Remove(existing);
 
             var newProduct = CopyProduct(product);
@@ -146,10 +156,10 @@ namespace Nile
             return CopyProduct(newProduct);
         }
 
-        private Product CopyProduct ( Product product)
+        private Product CopyProduct( Product product )
         {
             if (product == null)
-                return null; 
+                return null;
 
             var newProduct = new Product();
             newProduct.Id = product.Id;
@@ -160,7 +170,7 @@ namespace Nile
             return newProduct;
         }
 
-        // Finds product
+        //Find a product by ID
         private Product FindProduct( int id )
         {
             foreach (var product in _products)
@@ -173,9 +183,8 @@ namespace Nile
         }
 
         //private Product[] _products = new Product[100];
-        private List<Product> _products = new List<Product>();      // Generic List
-        private int _nextId = 1; 
-        //private List<int> _ints; 
-
+        private List<Product> _products = new List<Product>();
+        private int _nextId = 1;
+        //private List<int> _ints;
     }
 }

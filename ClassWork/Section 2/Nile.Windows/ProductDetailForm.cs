@@ -61,15 +61,25 @@ namespace Nile.Windows
         {
             if (!ValidateChildren())        // UI validation
             {
-                return; 
+                return;
             };
 
-            var product = new Product();
-            product.Name = _txtName.Text;
-            product.Description = _txtDescription.Text;
+            //var product = new Product();
+            //product.Id = Product?.Id ?? 0;
+            //product.Name = _txtName.Text;
+            //product.Description = _txtDescription.Text;
+            //product.Price = GetPrice(_txtPrice);
+            //product.IsDiscontinued = _txtDiscontinued.Checked;
 
-            product.Price = GetPrice(_txtPrice);
-            product.IsDiscontinued = _txtDiscontinued.Checked;
+            //Object initializer syntax
+            var product = new Product() 
+            {
+                Id = Product?.Id ?? 0,
+                Name = _txtName.Text,
+                Description = _txtDescription.Text,
+                Price = GetPrice(_txtPrice),
+                IsDiscontinued = _txtDiscontinued.Checked
+            };
 
             //Add Validation
             var error = product.Validate();
