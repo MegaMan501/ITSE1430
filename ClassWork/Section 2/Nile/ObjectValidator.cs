@@ -10,7 +10,7 @@ namespace Nile
     /// <summary>Validate object</summary>
     public class ObjectValidator
     {
-        public static bool TryValidate( IValidatableObject value, IEnumerable<ValidationResult> errors )
+        public static bool TryValidate( IValidatableObject value, out IEnumerable<ValidationResult> errors )
         {
             var context = new ValidationContext(value);
             var results = new List<ValidationResult>();
