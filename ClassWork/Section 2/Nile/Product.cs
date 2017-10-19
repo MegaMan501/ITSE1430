@@ -11,7 +11,7 @@ namespace Nile
     /// <remarks> 
     /// This will represent a product with other stuff.
     /// </remarks>
-    public class Product  : IValidatableObject
+    public class Product : IValidatableObject
     {
         public Product()
         {
@@ -82,12 +82,18 @@ namespace Nile
         }
 
         private int[] _sizes = new int[4];
-        
+
         //public abstract string Validate2();
+
+
+        //IEnumerable<ValidationResult> IValidatableObject.Validate( ValidationContext validationContext )
+        //{
+
+        //}
 
         /// <summary> Validate the object</summary>
         /// <returns> The error message for null.</returns>
-        public IEnumerable<ValidationResult> Validate( ValidationContext validationContext )
+        public IEnumerable<ValidationResult> Validate ( ValidationContext validationContext )
         {
             //var errors = new List<ValidationResult>();
 
@@ -102,7 +108,6 @@ namespace Nile
             //errors.Add(new ValidationResult("Price must be >= 0", new[] { nameof(Price) }));
 
             //return errors;
-
         }
 
         //public int ICanOnlySetIt { get; private set; }          // Limitation: the get or set need to be more private the field
