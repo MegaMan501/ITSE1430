@@ -45,13 +45,12 @@ namespace Nile.Stores
             return GetCore(id);
         }
 
-        protected abstract Product GetCore( int id );
-
         /// <summary>Gets all products.</summary>
         /// <returns>The products.</returns>
         public IEnumerable<Product> GetAll()
         {
             return GetAllCore();
+
             #region Ignore
             //How many products?
             //var count = 0;
@@ -75,8 +74,6 @@ namespace Nile.Stores
             #endregion
         }
 
-        protected abstract IEnumerable<Product> GetAllCore();
-
         /// <summary>Removes the product.</summary>
         /// <param name="product">The product to remove.</param>
         public void Remove( int id )
@@ -87,16 +84,12 @@ namespace Nile.Stores
 
             RemoveCore(id);
 
-            #region
             //if (_list[index].Name == product.Name)
             //{
             //    _list.RemoveAt(index);
             //    break;
             //};   
-            #endregion
         }
-
-        protected abstract void RemoveCore( int id );
 
         /// <summary>Updates a product.</summary>
         /// <param name="product">The product to update.</param>
@@ -120,8 +113,17 @@ namespace Nile.Stores
             return UpdateCore(existing, product);
         }
 
-        protected abstract Product UpdateCore(Product existing, Product newItem);
+        #region Protected Members
 
-        protected abstract Product AddCore( Product product );      // this what makes this an abstract class
+        protected abstract Product GetCore( int id );
+
+        protected abstract IEnumerable<Product> GetAllCore();
+
+        protected abstract void RemoveCore( int id );
+
+        protected abstract Product UpdateCore( Product existing, Product newItem );
+
+        protected abstract Product AddCore( Product product ); // this what makes this an abstract class
+        #endregion
     }
 }

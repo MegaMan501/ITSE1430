@@ -15,21 +15,19 @@ namespace Nile.Stores
         protected override Product AddCore( Product product )
         {
             var newProduct = CopyProduct(product);
-            AddCore(newProduct);
-
             _products.Add(newProduct);
 
             if (newProduct.Id <= 0)
                 newProduct.Id = _nextId++;
             else if (newProduct.Id >= _nextId)
-                _nextId = newProduct.Id;
+                _nextId = newProduct.Id + 1;
 
             return CopyProduct(newProduct);
         }
 
         /// <summary>Get a specific product.</summary>
         /// <returns>The product, if it exists.</returns>
-        protected override Product GetCore( int id )
+        protected override Product GetCore ( int id )
         {
             var product = FindProduct(id);
 
@@ -38,11 +36,12 @@ namespace Nile.Stores
 
         /// <summary>Gets all products.</summary>
         /// <returns>The products.</returns>
-        protected override IEnumerable<Product> GetAllCore()
+        protected override IEnumerable<Product> GetAllCore ()
         {
             foreach (var product in _products)
                 yield return CopyProduct(product);
 
+            #region Comments
             //How many products?
             //var count = 0;
             //foreach (var product in _products)
@@ -62,27 +61,30 @@ namespace Nile.Stores
             //};
 
             //return items;
+            #endregion
         }
 
         /// <summary>Removes the product.</summary>
         /// <param name="product">The product to remove.</param>
-        protected override void RemoveCore( int id )
+        protected override void RemoveCore ( int id )
         {
             var product = FindProduct(id);
             if (product != null)
                 _products.Remove(product);
 
+            #region Comments
             //if (_list[index].Name == product.Name)
             //{
             //    _list.RemoveAt(index);
             //    break;
-            //};        
+            //};
+            #endregion
         }
 
         /// <summary>Updates a product.</summary>
         /// <param name="product">The product to update.</param>
         /// <returns>The updated product.</returns>
-        protected override Product UpdateCore( Product existing, Product product )
+        protected override Product UpdateCore ( Product existing, Product product )
         {
             //Replace 
             _products.Remove(existing);

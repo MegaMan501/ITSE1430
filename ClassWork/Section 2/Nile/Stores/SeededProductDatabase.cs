@@ -11,7 +11,7 @@ namespace Nile.Stores
     {
         public SeededMemoryProductDatabase()
         {
-            #region 
+            #region Other approaches
             //Long way
             /*
             var product = new Product();
