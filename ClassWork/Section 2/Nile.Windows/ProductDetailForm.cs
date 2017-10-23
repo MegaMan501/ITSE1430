@@ -133,11 +133,6 @@ namespace Nile.Windows
         //        e.Cancel = true;
         //}
 
-        //private void ProductDetailForm_FormClosed( object sender, FormClosedEventArgs e )
-        //{
-
-        //}
-
         private void OnValidatingPrice( object sender, CancelEventArgs e )
         {
             var tb = sender as TextBox;

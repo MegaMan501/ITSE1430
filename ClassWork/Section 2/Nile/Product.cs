@@ -13,28 +13,16 @@ namespace Nile
     /// </remarks>
     public class Product : IValidatableObject
     {
-        public Product()
-        {
-            //Cross field initialization
-        }
-        //public readonly Product None = new Product();           // set at the moment the instance is created; readonly does not cascade 
-
         /// <summary> Gets or sets the unique identifier </summary>
         public int Id { get; set; }
+
         /// <summary>Get or Set the Name</summary>
         public string Name
         {
             // String get_Name ()
-            get                                             // Get {} always has a return statement
-            {
-                return _name ?? "";     
-            }
-
+            get { return _name ?? ""; }
             // void set_Name ( string value )
-            set
-            {
-                _name = value?.Trim();
-            }
+            set{_name = value?.Trim();}
         }
 
         /// <summary>Get or Set the Description</summary>
@@ -49,20 +37,6 @@ namespace Nile
 
         /// <summary>Is it Discontinued</summary>
         public bool IsDiscontinued { get; set; }                //auto property
-
-        public const decimal DiscontinuedDiscountRate = 0.10M;
-        
-        /// <summary> Gets the discounted price, if applicable. </summary>
-        public decimal DiscountedPrice                          // calculated property, there is no backing field
-        {
-            get {
-                //if (IsDiscontinued)
-                if (this.IsDiscontinued)
-                    return Price * DiscontinuedDiscountRate;
-
-                return Price;
-            }
-        }
 
         public override string ToString()
         {
@@ -82,10 +56,7 @@ namespace Nile
         }
 
         private int[] _sizes = new int[4];
-
-        //public abstract string Validate2();
-
-
+      
         //IEnumerable<ValidationResult> IValidatableObject.Validate( ValidationContext validationContext )
         //{
 
@@ -110,12 +81,7 @@ namespace Nile
             //return errors;
         }
 
-        //public int ICanOnlySetIt { get; private set; }          // Limitation: the get or set need to be more private the field
-        //public int ICanOnlySetIt2 { get; }
-
         private string _name;
         private string _description;
-
-        //private readonly double _someValueICannotChange = 10;   // Fix at moment that there is an instance of this class; readonly does not need to inialized
     }
 }
