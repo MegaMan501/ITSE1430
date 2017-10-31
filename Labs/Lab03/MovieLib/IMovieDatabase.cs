@@ -7,9 +7,9 @@ namespace MovieLib
     public interface IMovieDatabase
     {
         /// <summary>Add a movie to database.</summary>
-        /// <param name="movies">The movie to add.</param>
+        /// <param name="movie">The movie to add.</param>
         /// <returns>The newly added movie.</returns>
-        Movies Add( Movies movies );
+        Movies Add( Movies movie );
 
         /// <summary>Get a specific movie from the database.</summary>
         /// <param name="id">The unique ID of the movie.</param>
@@ -25,9 +25,9 @@ namespace MovieLib
         void Remove( int id );
 
         /// <summary>Updates a movie in the database</summary>
-        /// <param name="movies">The updated movie information.</param>
+        /// <param name="movie">The updated movie information.</param>
         /// <returns>The updated movie.</returns>
-        Movies Update( Movies movies );
+        Movies Update( Movies movie );
 
     }
 }

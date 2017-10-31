@@ -77,7 +77,8 @@ namespace MovieLib.Windows
             {
                 // Show the Error
                 ShowError("Not Valid", "Validation Error");
-            }
+                return; 
+            };
 
             Movies = movie;
             this.DialogResult = DialogResult.OK;

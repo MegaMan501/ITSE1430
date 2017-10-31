@@ -9,11 +9,11 @@ namespace MovieLib.Data.Memory
     public class MemoryMovieDatabase : MovieDatabase
     {
         /// <summary>Add a movie.</summary>
-        /// <param name="movies">The movie to add.</param>
+        /// <param name="movie">The movie to add.</param>
         /// <returns>The added product.</returns>
-        protected override Movies AddCore( Movies movies )
+        protected override Movies AddCore( Movies movie )
         {
-            var newMovie = CopyMovie(movies);
+            var newMovie = CopyMovie(movie);
             _movies.Add(newMovie);
 
             if (newMovie.Id <= 0)
@@ -65,17 +65,17 @@ namespace MovieLib.Data.Memory
         }
         
         // Copies one movie to another
-        private Movies CopyMovie ( Movies movies)
+        private Movies CopyMovie ( Movies movie)
         {
-            if (movies == null)
+            if (movie == null)
                 return null;
 
             var newMovie = new Movies();
-            newMovie.Id = movies.Id;
-            newMovie.Title = movies.Title;
-            newMovie.Description = movies.Description;
-            newMovie.Length = movies.Length;
-            newMovie.IsOwned = movies.IsOwned;
+            newMovie.Id = movie.Id;
+            newMovie.Title = movie.Title;
+            newMovie.Description = movie.Description;
+            newMovie.Length = movie.Length;
+            newMovie.IsOwned = movie.IsOwned;
 
             return newMovie; 
         }

@@ -10,19 +10,19 @@ namespace MovieLib
     public abstract class MovieDatabase : IMovieDatabase
     {
         /// <summary>Adds a movie.</summary>
-        /// <param name="movies">The movie to add.</param>
+        /// <param name="movie">The movie to add.</param>
         /// <returns>The added product.</returns>
-        public Movies Add( Movies movies )
+        public Movies Add( Movies movie )
         {
             // Validate
-            if (movies == null)
+            if (movie == null)
                 return null;
 
             // Using IValidatableObject
-            if (!ObjectValidator.TryValidate(movies, out var errors))
+            if (!ObjectValidator.TryValidate(movie, out var errors))
                 return null;
 
-            return AddCore(movies);
+            return AddCore(movie);
         }
 
         /// <summary>Get a specific movie.</summary>
@@ -54,24 +54,24 @@ namespace MovieLib
         }
 
         /// <summary>Updates a movie.</summary>
-        /// <param name="movies">The movie to be updated.</param>
+        /// <param name="movie">The movie to be updated.</param>
         /// <returns>The updated movie.</returns>
-        public Movies Update( Movies movies )
+        public Movies Update( Movies movie )
         {
             // Validate
-            if (movies == null)
+            if (movie == null)
                 return null;
 
             // Using IValidatableObject
-            if (!ObjectValidator.TryValidate(movies, out var errors))
+            if (!ObjectValidator.TryValidate(movie, out var errors))
                 return null;
 
             // Get existing movie
-            var existing = GetCore(movies.Id);
+            var existing = GetCore(movie.Id);
             if (existing == null)
                 return null;
 
-            return UpdateCore(existing, movies);
+            return UpdateCore(existing, movie);
         }
 
         #region Protected Members
@@ -84,7 +84,7 @@ namespace MovieLib
 
         protected abstract Movies UpdateCore( Movies existing, Movies movie );
 
-        protected abstract Movies AddCore( Movies movies );
+        protected abstract Movies AddCore( Movies movie );
 
         #endregion
     }
