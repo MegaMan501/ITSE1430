@@ -131,6 +131,8 @@ namespace MovieLib.Windows
             var movie = GetSelectedMovies();
             if (movie != null)
                 DeleteMovie(movie);
+
+            e.SuppressKeyPress = true;
         }
     }
 }
