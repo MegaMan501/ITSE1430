@@ -22,5 +22,10 @@ namespace Nile
             errors = results;
             return Validator.TryValidateObject(value, context, results);
         }
+
+        public static void Validate ( IValidatableObject value  )
+        {
+            Validator.ValidateObject(value, new ValidationContext(value));
+        }
     }
 }

@@ -12,16 +12,32 @@ namespace Nile.Stores
         /// <summary>Adds a product.</summary>
         /// <param name="product">The product to add.</param>
         /// <returns>The added product.</returns>
+        /// <exception cref="ArgumentNullException">Product is null.</exception>
+        /// <exception cref="ValidationException">Product is invalid</exception>
         public Product Add ( Product product )
         {
             //Validate
             if (product == null)
-                return null;
-
-            if (!ObjectValidator.TryValidate(product, out var errors))
-                return null;
+                throw new ArgumentNullException(nameof(product),"Product was null");
             
-            return AddCore(product);
+            //if (!ObjectValidator.TryValidate(product, out var errors))
+            //    throw new System.ComponentModel.DataAnnotations.ValidationException("Product was not valid.", nameof(product));
+            //return null;
+            ObjectValidator.Validate(product);
+
+            try
+            {
+                return AddCore(product);
+            } catch (Exception e)
+            {
+                // Throw different exeception
+                throw new Exception("Add Failed.", e);
+
+                // Re-throw
+                throw;                  // if in a catch block you can do this, this is special
+
+                // Silently ignore - almost always bad
+            };
         }
 
         /// <summary>Get a specific product.</summary>
@@ -30,7 +46,8 @@ namespace Nile.Stores
         {
             //Validate
             if (id <= 0)
-                return null;
+                throw new ArgumentOutOfRangeException(nameof(id), "ID must be > 0");
+                //return null;
 
             return GetCore(id);
         }
@@ -48,27 +65,33 @@ namespace Nile.Stores
         {
             // Validate
             if (id <= 0)
-                return;
+                throw new ArgumentOutOfRangeException(nameof(id), "ID must be > 0");
 
             RemoveCore(id);
         }
-        
+
         /// <summary>Updates a product.</summary>
         /// <param name="product">The product to update.</param>
         /// <returns>The updated product.</returns>
+        /// <exception cref="ArgumentNullException">Product is null.</exception>
+        /// <exception cref="ValidationException">Product is invalid</exception>
+        /// <exception cref="Exception">Product not found.</exception>
         public Product Update ( Product product )
         {
             // Validate
             if (product == null)
-                return null;
-            
-            if (!ObjectValidator.TryValidate(product, out var errors))
-                return null;
-            
+                throw new ArgumentNullException(nameof(product));
+
+            //if (!ObjectValidator.TryValidate(product, out var errors))
+            //    throw new ArgumentException("Product is invalid.", nameof(product));
+            ObjectValidator.Validate(product);
+
             //Get existing product
-            var existing = GetCore(product.Id);
-            if (existing == null)
-                return null;
+            //var existing = GetCore(product.Id);
+            var existing = GetCore(product.Id) ?? throw new Exception("Product not found.");
+            //if (existing == null)
+            //    throw new Exception("Product not found.");
+
 
             return UpdateCore(existing, product);
         }

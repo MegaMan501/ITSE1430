@@ -22,6 +22,10 @@ namespace Nile.Stores
             else if (newProduct.Id >= _nextId)
                 _nextId = newProduct.Id + 1;
 
+            //Temporary
+            if (_nextId % 2 == 0)
+                throw new InvalidOperationException("Id invalid");
+
             return CopyProduct(newProduct);
         }
 
@@ -31,7 +35,7 @@ namespace Nile.Stores
         {
             var product = FindProduct(id);
 
-            return (product != null) ? CopyProduct(product) : null;
+            return (product != null) ? CopyProduct(product) : throw new Exception("Product not in memory");
         }
 
         /// <summary>Gets all products.</summary>
