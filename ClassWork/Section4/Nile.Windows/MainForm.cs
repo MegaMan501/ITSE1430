@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Windows.Forms;
+using Nile.Stores;
 
 namespace Nile.Windows
 {
@@ -18,6 +19,9 @@ namespace Nile.Windows
         protected override void OnLoad( EventArgs e )
         {
             base.OnLoad(e);
+
+            _database = new Nile.Stores.FileProductDatabase("products.csv");
+            ProductDatabaseExtensions.WithSeedData(_database);
 
             _gridProducts.AutoGenerateColumns = false;
 
@@ -122,9 +126,27 @@ namespace Nile.Windows
                 return;
 
             //Delete product
-            _database.Remove(product.Id);
+            try
+            {
+                _database.Remove(product.Id);
+            } catch (Exception e)
+            {
+                DisplayError(e, "Delete Failed");
+            };
             UpdateList();
+            
         }
+
+        private void DisplayError( Exception error, string title = "Error" )
+        {
+            DisplayError(error.Message, title);
+        }
+
+        private void DisplayError( string message, string title = "Error" )
+        {
+            MessageBox.Show(this, message, title ?? "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
 
         private void EditProduct( Product product )
         {
@@ -134,7 +156,14 @@ namespace Nile.Windows
                 return;
 
             //Save product
-            _database.Update(child.Product);
+            try
+            {
+                _database.Update(child.Product);
+            } catch (Exception ex)
+            {
+                DisplayError(ex, "Update Failed");
+            };
+
             UpdateList();
         }
 
@@ -148,10 +177,17 @@ namespace Nile.Windows
 
         private void UpdateList()
         {
-            _bsProducts.DataSource = _database.GetAll().ToList();
+            try
+            {
+                _bsProducts.DataSource = _database.GetAll().ToList();
+            } catch (Exception e)
+            {
+                DisplayError(e, "Refresh Failed");
+                _bsProducts.DataSource = null;
+            };
         }
 
-        private IProductDatabase _database = new Nile.Stores.MemoryProductDatabase();
+        private IProductDatabase _database;
         #endregion
     }
 }
