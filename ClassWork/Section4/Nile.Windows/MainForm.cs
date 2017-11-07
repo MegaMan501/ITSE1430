@@ -19,22 +19,22 @@ namespace Nile.Windows
         protected override void OnLoad( EventArgs e )
         {
             base.OnLoad(e);
+            
+            //_miFileExit.Click += OnFileExit; 
+            _miFileExit.Click += ( o, ea ) => Close(); 
 
             _database = new Nile.Stores.FileProductDatabase("products.csv");
-            ProductDatabaseExtensions.WithSeedData(_database);
-
+            
+            // Use this extionsion luke
+            //ProductDatabaseExtensions.WithSeedData(_database);
+            _database.WithSeedData();
+            
             _gridProducts.AutoGenerateColumns = false;
 
             UpdateList();
         }
 
         #region Event Handlers
-
-        //Menus
-        private void OnFileExit( object sender, EventArgs e )
-        {
-            Close();
-        }
 
         private void OnProductAdd( object sender, EventArgs e )
         {

@@ -3,6 +3,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nile.Stores
 {
@@ -38,8 +39,11 @@ namespace Nile.Stores
         /// <returns>The products.</returns>
         protected override IEnumerable<Product> GetAllCore ()
         {
-            foreach (var product in _products)
-                yield return CopyProduct(product);            
+            return from item in _products
+                   select CopyProduct(item);
+            
+            //foreach (var product in _products)
+              //  yield return CopyProduct(product);            
         }
 
         /// <summary>Removes the product.</summary>
@@ -86,15 +90,25 @@ namespace Nile.Stores
         //Find a product by ID
         private Product FindProduct ( int id )
         {
-            foreach (var product in _products)
-            {
-                if (product.Id == id)
-                    return product;
-            };
+            // Linqs syntax
+            return (from product in _products
+                   where product.Id == id
+                   select product).FirstOrDefault();
 
-            return null;
+            // Lambda Expression
+            return _products.Where( p => p.Id == id )
+                            .Select( p => p )
+                            .FirstOrDefault();
+
+            //foreach (var product in _products)
+            //{
+            //    if (product.Id == id)
+            //        return product;
+            //};
+
+            //return null;
         }
-
+        
         private List<Product> _products = new List<Product>();
         private int _nextId = 1;
     }

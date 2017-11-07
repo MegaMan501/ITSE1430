@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Nile.Stores
+namespace Nile
 {
     /// <summary>Provides a base implementation of <see cref="IProductDatabase"/>.</summary>
     public abstract class ProductDatabase : IProductDatabase

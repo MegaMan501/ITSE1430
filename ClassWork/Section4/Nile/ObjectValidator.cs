@@ -23,6 +23,8 @@ namespace Nile
             return Validator.TryValidateObject(value, context, results);
         }
 
+        /// <summary>Validates an object.</summary>
+        /// <param name="value"></param>
         public static void Validate ( IValidatableObject value  )
         {
             Validator.ValidateObject(value, new ValidationContext(value));

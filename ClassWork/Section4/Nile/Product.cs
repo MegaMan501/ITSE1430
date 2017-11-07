@@ -8,9 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Nile
 {
     /// <summary>Represents a product.</summary>
-    /// <remarks>
-    /// This will represent a product with other stuff.
-    /// </remarks>
+    /// <remarks>This will represent a product with other stuff.</remarks>
     public class Product : IValidatableObject
     {
         /// <summary>Gets or sets the unique identifier.</summary>
