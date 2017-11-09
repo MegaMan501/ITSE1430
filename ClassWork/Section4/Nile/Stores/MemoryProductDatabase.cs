@@ -90,7 +90,7 @@ namespace Nile.Stores
         //Find a product by ID
         private Product FindProduct ( int id )
         {
-            // Linqs syntax
+            // LINQ syntax
             return (from product in _products
                    where product.Id == id
                    select product).FirstOrDefault();
