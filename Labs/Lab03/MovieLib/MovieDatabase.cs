@@ -22,6 +22,13 @@ namespace MovieLib
             if (!ObjectValidator.TryValidate(movie, out var errors))
                 return null;
 
+            // Return null if the movie already exists
+            foreach ( var _movies in GetAll())
+            {
+                if (_movies.Title == movie.Title)
+                    return null; 
+            }
+
             return AddCore(movie);
         }
 
