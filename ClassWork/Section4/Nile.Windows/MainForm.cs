@@ -19,22 +19,28 @@ namespace Nile.Windows
         protected override void OnLoad( EventArgs e )
         {
             base.OnLoad(e);
-            
-            //_miFileExit.Click += OnFileExit; 
-            _miFileExit.Click += ( o, ea ) => Close(); 
+
+            //_miFileExit.Click += OnFileExit;
+            _miFileExit.Click += (o, ea) => Close();
 
             _database = new Nile.Stores.FileProductDatabase("products.csv");
-            
-            // Use this extionsion luke
+
+            //Use the extension Luke
             //ProductDatabaseExtensions.WithSeedData(_database);
             _database.WithSeedData();
-            
+
             _gridProducts.AutoGenerateColumns = false;
 
             UpdateList();
         }
 
         #region Event Handlers
+
+        //Menus
+        //private void OnFileExit( object sender, EventArgs e )
+        //{
+        //    Close();
+        //}
 
         private void OnProductAdd( object sender, EventArgs e )
         {
@@ -50,12 +56,11 @@ namespace Nile.Windows
                 _database.Add(child.Product);
             } catch (ValidationException ex)
             {
-                MessageBox.Show(this, "Validation failed", "Error");
+                DisplayError(ex, "Validation Failed");
             } catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, "Error");
+                DisplayError(ex, "Add Failed");
             };
-            
             UpdateList();
         }
 
@@ -65,7 +70,7 @@ namespace Nile.Windows
             if (product == null)
                 return;
 
-            DeleteProduct(product);
+            DeleteProduct(product);            
         }
 
         private void OnProductEdit( object sender, EventArgs e )
@@ -111,7 +116,7 @@ namespace Nile.Windows
             if (product != null)
                 DeleteProduct(product);
 
-            // Don't Continue with key
+            //Don't continue with key
             e.SuppressKeyPress = true;
         }
         #endregion
@@ -134,19 +139,17 @@ namespace Nile.Windows
                 DisplayError(e, "Delete Failed");
             };
             UpdateList();
-            
         }
 
-        private void DisplayError( Exception error, string title = "Error" )
+        private void DisplayError ( Exception error, string title = "Error" )
         {
             DisplayError(error.Message, title);
         }
 
-        private void DisplayError( string message, string title = "Error" )
+        private void DisplayError ( string message, string title = "Error" )
         {
             MessageBox.Show(this, message, title ?? "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-
 
         private void EditProduct( Product product )
         {
@@ -161,7 +164,7 @@ namespace Nile.Windows
                 _database.Update(child.Product);
             } catch (Exception ex)
             {
-                DisplayError(ex, "Update Failed");
+                DisplayError(ex, "Update Failed");                    
             };
 
             UpdateList();

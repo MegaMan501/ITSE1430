@@ -24,8 +24,9 @@ namespace Nile
         }
 
         /// <summary>Validates an object.</summary>
-        /// <param name="value"></param>
-        public static void Validate ( IValidatableObject value  )
+        /// <param name="value">The object to validate.</param>
+        /// <exception cref="ValidationException"><paramref name="value"/> is invalid.</exception>
+        public static void Validate ( IValidatableObject value )
         {
             Validator.ValidateObject(value, new ValidationContext(value));
         }

@@ -23,16 +23,20 @@ namespace Nile.Stores
             else if (newProduct.Id >= _nextId)
                 _nextId = newProduct.Id + 1;
 
+            //Temporary
+            //if (_nextId % 2 == 0)
+            //    throw new InvalidOperationException("Id invalid");
+
             return CopyProduct(newProduct);
         }
 
         /// <summary>Get a specific product.</summary>
         /// <returns>The product, if it exists.</returns>
         protected override Product GetCore ( int id )
-        {
+        {            
             var product = FindProduct(id);
 
-            return (product != null) ? CopyProduct(product) : throw new Exception("Product not in memory");
+            return (product != null) ? CopyProduct(product) : throw new Exception("Product not in memory.");
         }
 
         /// <summary>Gets all products.</summary>
@@ -43,7 +47,7 @@ namespace Nile.Stores
                    select CopyProduct(item);
             
             //foreach (var product in _products)
-              //  yield return CopyProduct(product);            
+               // yield return CopyProduct(product);            
         }
 
         /// <summary>Removes the product.</summary>
@@ -70,19 +74,20 @@ namespace Nile.Stores
 
             return CopyProduct(newProduct);
         }
-        
+
         //Copies one product to another
-        private Product CopyProduct ( Product product )
+        private Product CopyProduct( Product product )
         {
             if (product == null)
                 return null;
 
-            var newProduct = new Product();
-            newProduct.Id = product.Id;
-            newProduct.Name = product.Name;
-            newProduct.Description = product.Description;
-            newProduct.Price = product.Price;
-            newProduct.IsDiscontinued = product.IsDiscontinued;
+            var newProduct = new Product() {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                IsDiscontinued = product.IsDiscontinued
+            };
 
             return newProduct;
         }
@@ -90,16 +95,16 @@ namespace Nile.Stores
         //Find a product by ID
         private Product FindProduct ( int id )
         {
-            // LINQ syntax
+            //LINQ syntax
             return (from product in _products
-                   where product.Id == id
-                   select product).FirstOrDefault();
+                    where product.Id == id
+                    select product).FirstOrDefault();
 
-            // Lambda Expression
-            return _products.Where( p => p.Id == id )
-                            .Select( p => p )
-                            .FirstOrDefault();
-
+            //Extension method approach
+            //return _products.Where( p => p.Id == id )
+            //                .Select( p => p )
+            //                .FirstOrDefault();
+            
             //foreach (var product in _products)
             //{
             //    if (product.Id == id)
@@ -107,8 +112,8 @@ namespace Nile.Stores
             //};
 
             //return null;
-        }
-        
+        }        
+
         private List<Product> _products = new List<Product>();
         private int _nextId = 1;
     }

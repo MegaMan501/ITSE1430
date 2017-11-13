@@ -8,7 +8,9 @@ using System.ComponentModel.DataAnnotations;
 namespace Nile
 {
     /// <summary>Represents a product.</summary>
-    /// <remarks>This will represent a product with other stuff.</remarks>
+    /// <remarks>
+    /// This will represent a product with other stuff.
+    /// </remarks>
     public class Product : IValidatableObject
     {
         /// <summary>Gets or sets the unique identifier.</summary>
@@ -25,20 +27,21 @@ namespace Nile
         /// <summary>Gets or sets the description.</summary>
         public string Description
         {
-            get => _description ?? ""; 
-            set => _description = value?.Trim(); 
+            get => _description ?? "";
+            set => _description = value?.Trim();
         }
 
+        //Calculated property
         //public decimal CalculatedProperty
         //{
         //    get => 0M;
         //}
 
-        // Get only property
+        //Getter only property
         public decimal CalculatedProperty => 0M;
 
-        // Field, oops
-        public decimal CalculatedProperty1 = 0M;
+        //Field, oops
+        public decimal CalculatedProperty2 = 0M;
 
         /// <summary>Gets or sets the price.</summary>
         public decimal Price { get; set; } = 0;      

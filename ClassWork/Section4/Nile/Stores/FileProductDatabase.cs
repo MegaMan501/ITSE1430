@@ -9,22 +9,20 @@ namespace Nile.Stores
 {
     /// <summary>Provides an implementation of <see cref="IProductDatabase"/> using a memory collection.</summary>
     public class FileProductDatabase : MemoryProductDatabase
-    {
-        /// <summary></summary>
-        /// <param name="fileName"></param>
-        public FileProductDatabase ( string fileName)
+    {        
+        public FileProductDatabase ( string filename )
         {
-            // Validate argument
-            if (fileName == null)
-                throw new ArgumentNullException(nameof(fileName));
-            if (String.IsNullOrEmpty(fileName))
-                throw new ArgumentException("Filename cannot be empty", nameof(fileName));
+            //Validate argument
+            if (filename == null)
+                throw new ArgumentNullException(nameof(filename));
+            if (String.IsNullOrEmpty(filename))
+                throw new ArgumentException("Filename cannot be empty.", nameof(filename));
 
-            _fileName = fileName;
+            _filename = filename;
 
-            LoadFile(fileName);
-         }
-        
+            LoadFile(filename);
+        }
+
         /// <summary>Adds a product.</summary>
         /// <param name="product">The product to add.</param>
         /// <returns>The added product.</returns>
@@ -32,18 +30,18 @@ namespace Nile.Stores
         {
             var newProduct = base.AddCore(product);
 
-            SaveFile(_fileName);
+            SaveFile(_filename);
 
             return newProduct;
         }
-
+        
         /// <summary>Removes the product.</summary>
         /// <param name="product">The product to remove.</param>
         protected override void RemoveCore ( int id )
         {
             base.RemoveCore(id);
 
-            SaveFile(_fileName);
+            SaveFile(_filename);
         }
 
         /// <summary>Updates a product.</summary>
@@ -52,17 +50,17 @@ namespace Nile.Stores
         protected override Product UpdateCore ( Product existing, Product product )
         {
             var newProduct = base.UpdateCore(existing, product);
-            SaveFile(_fileName);
+            SaveFile(_filename);
 
-            return newProduct; 
+            return newProduct;
         }
-        
-        private void LoadFile( string fileName)
-        {
-            if (!File.Exists(fileName))
-                return; 
 
-            var lines = File.ReadAllLines(fileName);
+        private void LoadFile ( string filename )
+        {
+            if (!File.Exists(filename))
+                return;
+
+            var lines = File.ReadAllLines(filename);
             foreach (var line in lines)
             {
                 if (String.IsNullOrEmpty(line))
@@ -81,39 +79,33 @@ namespace Nile.Stores
             };
         }
 
-        private void SaveFile(string fileName)
+        private void SaveFile ( string filename )
         {
-            // Streaming Mode
+            //Streaming
             //StreamWriter writer = null;
-            //var stream = File.OpenWrite(fileName);
+            //var stream = File.OpenWrite(filename);
             //try
             //{
-            //    // Write Stuff
-            //    writer = new StreamWriter(stream);
+            //    //Write stuff
+            //    writer = new StreamWriter(stream);                
             //} finally
             //{
             //    writer?.Dispose();
             //    stream.Close();
-            //};
-            using (var writer = new StreamWriter(fileName))
+            //};            
+            using (var writer = new StreamWriter(filename))
             {
-                // Write Stuff
+                //Write stuff
                 foreach (var product in GetAllCore())
                 {
-                    var row = String.Join(",", 
-                        product.Id, 
-                        product.Name, 
-                        product.Description, 
-                        product.Price, 
-                        product.IsDiscontinued);
+                    var row = String.Join(",", product.Id, product.Name, 
+                                          product.Description, product.Price, product.IsDiscontinued);
 
                     writer.WriteLine(row);
                 };
-                
             };
-            
         }
 
-        private readonly string _fileName; 
+        private readonly string _filename;
     }
 }
