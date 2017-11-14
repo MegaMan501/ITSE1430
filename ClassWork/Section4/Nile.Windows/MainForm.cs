@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Windows.Forms;
 using Nile.Stores;
-using Nile.Stores.SQL;
+using Nile.Stores.Sql;
 
 namespace Nile.Windows
 {
@@ -26,7 +26,7 @@ namespace Nile.Windows
             _miFileExit.Click += (o, ea) => Close();
 
             var connString = ConfigurationManager.ConnectionStrings["ProductDatabase"].ConnectionString;
-            _database = new Nile.Stores.SQL.SQLProductDatabase(connString);
+            _database = new Nile.Stores.Sql.SQLProductDatabase(connString);
 
             //Use the extension Luke
             //ProductDatabaseExtensions.WithSeedData(_database);

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nile.Stores.SQL
+namespace Nile.Stores.Sql
 {
     /// <summary>Provides an implementation of <see cref="ProductDatabase">Using SQL Server</summary>
     public class SQLProductDatabase : ProductDatabase
