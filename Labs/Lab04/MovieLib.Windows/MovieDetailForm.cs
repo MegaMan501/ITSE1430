@@ -13,25 +13,20 @@ namespace MovieLib.Windows
             InitializeComponent();
         }
 
-        public MovieDetailForm( string title ) : this()
+        public MovieDetailForm( IMovieDatabase database ) : this()
         {
-            Text = title; 
+            _database = database;
         }
-
-        public MovieDetailForm( string title, Movie movie) : this(title)
-        {
-            Movie = movie; 
-        }
-
+            
         #endregion
        
-        /// <summary> Gets or sets the movie being shown. </summary>
         public Movie Movie { get; set; }
 
         protected override void OnLoad( EventArgs e )
         {
             base.OnLoad(e);
 
+            // Loading the Data
             if (Movie != null)
             {
                 _txtTitle.Text = Movie.Title;
@@ -40,6 +35,7 @@ namespace MovieLib.Windows
                 _chkOwned.Checked = Movie.IsOwned;
             }
 
+            // Validate
             ValidateChildren();
         }
 
@@ -56,22 +52,19 @@ namespace MovieLib.Windows
             if (!ValidateChildren())
                 return;
 
-            var movie = new Movie() 
+            var movie = CreateMovie();
+            try
             {
-                Id = Movie?.Id ?? 0,
-                Title = _txtTitle.Text,
-                Description = _txtDescription.Text,
-                Length = GetLength(_txtLength),
-                IsOwned = _chkOwned.Checked,
-            };
-
-            if (!ObjectValidator.TryValidate(movie, out var errors))
+                if (movie.Id == 0)
+                    movie = _database.Add(movie);
+                else
+                    movie = _database.Update(movie);
+            } catch (Exception ex)
             {
-                // Show the Error
-                ShowError("Not Valid", "Validation Error");
-                return;
-            };
-
+                ShowError(ex.Message, "Error");
+                return; 
+            }
+           
             Movie = movie;
             DialogResult = DialogResult.OK;
             Close();
@@ -79,33 +72,56 @@ namespace MovieLib.Windows
 
         private void OnValidatingTitle( object sender, CancelEventArgs e )
         {
-            var tb = sender as TextBox;
+            var control = sender as TextBox;
 
-            if (String.IsNullOrEmpty(tb.Text))
-                _error.SetError(tb, "Title is required.");
+            if (String.IsNullOrEmpty(control.Text))
+            {
+                _error.SetError(control, "Title is required.");
+                e.Cancel = true; 
+            }
             else
-                _error.SetError(tb, "");
+                _error.SetError(control, "");
         }
 
         private void OnValidatingLength( object sender, CancelEventArgs e )
         {
-            var tb = sender as TextBox;
+            var control = sender as TextBox;
+            var length = ParseInt32(control.Text);
 
-            if (GetLength(tb) < 0)
+            if (length < 0)
             {
+                _error.SetError(control, "Length must be >= 0.");
                 e.Cancel = true;
-                _error.SetError(_txtLength, "Length must be >= 0.");
             } else
-                _error.SetError(_txtLength, "");
+                _error.SetError(control, "");
         }
 
         #endregion
 
         #region Private Members
 
-        private int GetLength( TextBox control )
+        private Movie CreateMovie()
         {
-            if (Int32.TryParse(control.Text, out int length))
+            var movie = new Movie() 
+            {
+                Title = _txtTitle.Text,
+                Description = _txtDescription.Text,
+                Length = ParseInt32(_txtLength.Text),
+                IsOwned = _chkOwned.Checked,
+            };
+
+            if (Movie != null)
+                movie.Id = Movie.Id;
+
+            return movie; 
+        }
+
+        private int ParseInt32( string text )
+        {
+            if (String.IsNullOrEmpty(text))
+                return 0; 
+
+            if (Int32.TryParse(text, out int length))
                 return length;
 
             return -1;
@@ -113,10 +129,10 @@ namespace MovieLib.Windows
 
         private void ShowError( string message, string title )
         {
-            MessageBox.Show(this, message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, message, title ?? "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        private readonly IMovieDatabase _database; 
         #endregion
-
     }
 }

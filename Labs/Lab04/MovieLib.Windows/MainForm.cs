@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Linq;
 using System.Windows.Forms;
-
+using MovieLib.Data.Sql;
 
 namespace MovieLib.Windows
 {
@@ -22,167 +22,158 @@ namespace MovieLib.Windows
         {
             base.OnLoad(e);
 
-            _miFileExit.Click += ( o, ea ) => Close();
+            if (!DesignMode)
+            {
+                _database = new SqlMovieDatabase("MovieDatabase");
 
-            var connString = ConfigurationManager.ConnectionStrings["MovieDatabase"].ConnectionString;
-            _database = new MovieLib.Data.Sql.SqlMovieDatabase(connString);
-
-            _gridMovies.AutoGenerateColumns = false;
-
-            UpdateList();
+                UpdateMovies();
+            };
         }
-        
+
         #region Event Handlers
+        private void OnFileExit( object sender, EventArgs e )
+        {
+            Close();
+        }
 
         private void OnMovieAdd( object sender, EventArgs e )
         {
-            var child = new MovieDetailForm("Movie Details");
+            var child = new MovieDetailForm(_database);
+
             if (child.ShowDialog(this) != DialogResult.OK)
                 return;
 
-            // Save movie
-            try
-            {
-                _database.Add(child.Movie);
-            } catch (ValidationException ex)
-            {
-                DisplayError(ex, "Validation Failed");
-            } catch (Exception ex)
-            {
-                DisplayError(ex, "Add Failed");
-            };
-            UpdateList(); 
-        }
-
-        private void OnMovieDelete( object sender, EventArgs e )
-        {
-            var movie = GetSelectedMovies();
-            if (movie == null)
-                return;
-
-            // Delete product
-            DeleteMovie(movie);
+            UpdateMovies(); 
         }
 
         private void OnMovieEdit( object sender, EventArgs e )
         {
-            var movie = GetSelectedMovies();
-            if (movie == null)
-            {
-                MessageBox.Show("No movies available.");
+            var selectedMovie = GetSelectedMovie(true);
+            if (selectedMovie == null)
                 return;
+
+            var form = new MovieDetailForm(_database);
+            form.Movie = selectedMovie;
+
+            if (form.ShowDialog(this) != DialogResult.OK)
+                return; 
+
+            UpdateMovies();
+        }
+
+        private void OnMovieDelete( object sender, EventArgs e )
+        {
+            var selectedMovie = GetSelectedMovie(true);
+            if (selectedMovie == null)
+                return;
+            
+            // Confirm
+            if (MessageBox.Show(this, $"Are you sure you want to delete '{selectedMovie.Title}'?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                return;
+
+            // Delete Movie
+            try
+            {
+                _database.Remove(selectedMovie.Id);
+            } catch (Exception ex)
+            {
+                DisplayError(ex.Message, "Delete Failed");
             };
 
-            EditMovie(movie);
+            UpdateMovies();
         }
-  
+
         private void OnHelpAbout( object sender, EventArgs e )
         {
-            var about = new AboutBox();
-            about.ShowDialog(this);
+            new AboutBox().ShowDialog(this);
         }
         
         // Grid
         private void OnEditRow( object sender, DataGridViewCellEventArgs e )
         {
-            var grid = sender as DataGridView;
-
             // Handle column clicks
             if (e.RowIndex < 0)
                 return;
 
-            var row = grid.Rows[e.RowIndex];
-            var movie = row.DataBoundItem as Movie;
-
-            if (movie != null)
-                EditMovie(movie);
+            OnMovieEdit(sender, EventArgs.Empty);            
         }
 
         private void OnKeyDownGrid( object sender, KeyEventArgs e )
         {
-            if (e.KeyCode != Keys.Delete)
+            var selectedMovie = GetSelectedMovie(false);
+            if (selectedMovie == null)
                 return;
 
-            var movie = GetSelectedMovies();
-            if (movie != null)
-                DeleteMovie(movie);
-
-            e.SuppressKeyPress = true;
+            if (e.KeyCode == Keys.Return)
+            {
+                OnMovieEdit(sender, EventArgs.Empty);
+                e.SuppressKeyPress = true;
+            } 
+            else if (e.KeyCode == Keys.Delete)
+            {
+                OnMovieDelete(sender, EventArgs.Empty);
+                e.SuppressKeyPress = true; 
+            };
         }
 
         #endregion
 
         #region Private Members
 
-        private void DeleteMovie( Movie movie )
+        private void DisplayError ( string message, string title = "Error")
         {
-            // Confirm
-            if (MessageBox.Show(this, $"Are you sure you want to delete '{movie.Title}'?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                return;
-
-            // Delete Movie
-            try
-            {
-                _database.Remove(movie.Id);
-            } catch (Exception e)
-            {
-                DisplayError(e, "Delete Failed");
-            };
-            UpdateList();
+            MessageBox.Show(this, message, title ?? "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-
+              
         private void DisplayError ( Exception error, string title = "Error")
         {
             DisplayError(error.Message, title);
         }
 
-        private void DisplayError ( string message, string title = "Error")
+        private Movie GetSelectedMovie( bool showErrorIfNone )
         {
-            MessageBox.Show(this, message, title ?? "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            var movie = _bsMovies.Current as Movie;
+
+            if (movie == null && showErrorIfNone)
+                DisplayError("No movie selected.", "No Movie");
+
+            return movie;
         }
 
-        private void EditMovie( Movie movie )
+        private void UpdateMovies()
         {
-            var child = new MovieDetailForm("Movie Details");
-            child.Movie = movie;
-            if (child.ShowDialog(this) != DialogResult.OK)
-                return;
+            // Try and get the currently selected item so we can restore it later
+            var selectedMovieId = (_bsMovies.Current as Movie)?.Id ?? 0;
 
-            // Save edited movie
+            // Get the movie
+            var movies = Enumerable.Empty<Movie>();
+
             try
             {
-                _database.Update(child.Movie);
+                movies = _database.GetAll() ?? Enumerable.Empty<Movie>();
             } catch (Exception e)
             {
-                DisplayError(e, "Update Failed");
-            }
-            UpdateList();
-        }
-
-        private Movie GetSelectedMovies()
-        {
-            if (_gridMovies.SelectedRows.Count > 0)
-                return _gridMovies.SelectedRows[0].DataBoundItem as Movie;
-
-            return null;
-        }
-
-        private void UpdateList()
-        {
-            try
-            {
-                _bsMovies.DataSource = _database.GetAll().ToList();
-            } catch (Exception e)
-            {
-                DisplayError(e, "Refresh Failed");
-                _bsMovies.DataSource = null; 
+                DisplayError(e.Message, "Refresh Failed");
             };
-            
+
+            // Rebind
+            _bsMovies.SuspendBinding();
+            _bsMovies.DataSource = from m in movies
+                                   orderby m.Title
+                                   select m;
+            _bsMovies.ResumeBinding(); 
+
+            // Restore the movie
+            if (selectedMovieId > 0)
+            {
+                var selectedMovie = movies.FirstOrDefault(m => m.Id == selectedMovieId);
+                if (selectedMovie != null)
+                    _bsMovies.Position = _bsMovies.IndexOf(selectedMovie);
+            };
         }
 
-        private IMovieDatabase _database; 
-        
+        private IMovieDatabase _database;
+
         #endregion
-        
     }
 }

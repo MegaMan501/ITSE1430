@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 
@@ -11,13 +13,11 @@ namespace MovieLib.Data.Sql
     {
         #region Construction
 
-        public SqlMovieDatabase( string connectionString )
+        public SqlMovieDatabase( string connectionStringOrName )
         {
-            _connectionString = connectionString; 
+            var connString = ConfigurationManager.ConnectionStrings[connectionStringOrName];
+            _connectionString = connString?.ConnectionString ?? connectionStringOrName; 
         }
-
-        private readonly string _connectionString;
-
         #endregion
 
         /// <summary>Adds a movie.</summary>
@@ -25,51 +25,31 @@ namespace MovieLib.Data.Sql
         /// <returns>The added movie.</returns>
         protected override Movie AddCore( Movie movie )
         {
-            var id = 0;
-            using (var conn = OpenDatabase())
+            using (var conn = new SqlConnection(_connectionString))
             {
-                var cmd = new SqlCommand("AddMovie", conn) { CommandType = CommandType.StoredProcedure};
+                var cmd = conn.CreateStoredProcedureCommand("AddMovie");
 
                 cmd.Parameters.AddWithValue("@title", movie.Title);
                 cmd.Parameters.AddWithValue("@length", movie.Length);
                 cmd.Parameters.AddWithValue("@isOwned", movie.IsOwned);
                 cmd.Parameters.AddWithValue("@description", movie.Description);
 
-                id = Convert.ToInt32(cmd.ExecuteScalar());
+                conn.Open(); 
+                movie.Id = cmd.ExecuteScalar<int>();
             };
 
-            return GetCore(id);
+            return movie;
         }
 
-        /// <summary>Get all of the movies.</summary>
-        /// <returns>All of the movies.</returns>
-        protected override IEnumerable<Movie> GetAllCore()
+        /// <summary>Finds a movie by its title.</summary>
+        /// <param name="title">The title to find.</param>
+        /// <returns>The movie, if any.</returns>
+        protected override Movie FindByTitleCore( string title )
         {
-            var movies = new List<Movie>();
-            using (var connection = OpenDatabase())
-            {
-                var cmd = new SqlCommand("GetAllMovies", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
+            // Not Supported directly
+            var movies = GetAllCore();
 
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var movie = new Movie() 
-                        {
-                            Id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0),
-                            Title = reader.GetFieldValue<string>(1),
-                            Description = reader.GetFieldValue<string>(2),
-                            Length = reader.GetInt32(3),
-                            IsOwned = reader.GetBoolean(4)
-                        };
-                        movies.Add(movie);
-                    };
-                };
-
-                return movies; 
-            };
-
+            return movies.FirstOrDefault(m => String.Compare(m.Title, title, true) == 0);
         }
 
         /// <summary>Get a movie given an id.</summary>
@@ -77,45 +57,41 @@ namespace MovieLib.Data.Sql
         /// <returns>The movie if any.</returns>
         protected override Movie GetCore( int id )
         {
-            using (var conn = OpenDatabase())
+            using (var conn = new SqlConnection(_connectionString))
             {
-                var cmd = new SqlCommand("GetMovie", conn) { CommandType = CommandType.StoredProcedure };
+                var cmd = conn.CreateStoredProcedureCommand("GetMovie");
                 cmd.Parameters.AddWithValue("@id", id);
 
-                var ds = new DataSet();
-                var da = new SqlDataAdapter() { SelectCommand = cmd, };
-
-                da.Fill(ds);
-
-                var table = ds.Tables.OfType<DataTable>().FirstOrDefault();
-                if (table != null)
-                {
-                    var row = table.AsEnumerable().FirstOrDefault();
-                    if (row != null)
-                    {
-                        return new Movie() 
-                        {
-                            Id = Convert.ToInt32(row["Id"]),
-                            Title = row.Field<string>("Title"),
-                            Description = row.Field<string>("Description"),
-                            Length = row.Field<int>("Length"),
-                            IsOwned = row.Field<bool>("IsOwned")
-                        };
-                    };
-                };
+                conn.Open();
+                return cmd.ExecuteReaderWithSingleResult(ReadMovie);
             };
-      
-            return null;
+        }
+
+        /// <summary>Get all of the movies.</summary>
+        /// <returns>All of the movies.</returns>
+        protected override IEnumerable<Movie> GetAllCore()
+        {
+            
+            using (var conn = new SqlConnection(_connectionString))
+            {
+                var cmd = conn.CreateStoredProcedureCommand("GetAllMovies");
+
+                conn.Open();
+                return cmd.ExcecuteReaderWithResults(ReadMovie);
+            };
+
         }
 
         /// <summary>Removes a movie given an ID.</summary>
         /// <param name="id">The ID.</param>
         protected override void RemoveCore( int id )
         {
-            using (var conn = OpenDatabase())
+            using (var conn = new SqlConnection(_connectionString))
             {
-                var cmd = new SqlCommand("RemoveMovie", conn) { CommandType = CommandType.StoredProcedure };
+                var cmd = conn.CreateStoredProcedureCommand("RemoveMovie");
                 cmd.Parameters.AddWithValue("@id", id);
+
+                conn.Open(); 
                 cmd.ExecuteNonQuery(); 
             };
         }
@@ -124,31 +100,41 @@ namespace MovieLib.Data.Sql
         /// <param name="existing">The existing movie.</param>
         /// <param name="newMovie">The movie to update.</param>
         /// <returns>The updated movie.</returns>
-        protected override Movie UpdateCore( Movie existing, Movie newMovie )
+        protected override Movie UpdateCore( Movie movie )
         {
-            using (var conn = OpenDatabase())
+            using (var conn = new SqlConnection(_connectionString))
             {
-                var cmd = new SqlCommand("UpdateMovie", conn) { CommandType = CommandType.StoredProcedure };
+                var cmd = conn.CreateStoredProcedureCommand("UpdateMovie");
 
-                cmd.Parameters.AddWithValue("@id", newMovie.Id);
-                cmd.Parameters.AddWithValue("@title", newMovie.Title);
-                cmd.Parameters.AddWithValue("@length", newMovie.Length);
-                cmd.Parameters.AddWithValue("@isOwned", newMovie.IsOwned);
-                cmd.Parameters.AddWithValue("@description", newMovie.Description);
+                cmd.Parameters.AddWithValue("@id", movie.Id);
+                cmd.Parameters.AddWithValue("@title", movie.Title);
+                cmd.Parameters.AddWithValue("@length", movie.Length);
+                cmd.Parameters.AddWithValue("@isOwned", movie.IsOwned);
+                cmd.Parameters.AddWithValue("@description", movie.Description);
 
+                conn.Open(); 
                 cmd.ExecuteNonQuery();
             };
 
-            return GetCore(existing.Id);
+            return movie; 
         }
 
-        private SqlConnection OpenDatabase()
+        #region Private Members
+
+        private Movie ReadMovie ( DbDataReader reader)
         {
-            var connection = new SqlConnection(_connectionString);
-
-            connection.Open();
-
-            return connection;
+            return new Movie() 
+            {
+                Id = reader.GetInt32(0),
+                Title = reader.GetString(1),
+                Description = reader.GetString(2),
+                Length = reader.GetInt32(3),
+                IsOwned = reader.GetBoolean(4)
+            };
         }
+
+        private readonly string _connectionString;
+
+        #endregion
     }
 }

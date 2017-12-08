@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace MovieLib.Data.Memory
 {
+    /// <summary>Provides an implementation of <see cref="IMovieDatabase"/> using an in-memory collection.</summary>
     public class MemoryMovieDatabase : MovieDatabase
     {
         /// <summary>Add a movie.</summary>
@@ -11,23 +12,21 @@ namespace MovieLib.Data.Memory
         /// <returns>The added product.</returns>
         protected override Movie AddCore( Movie movie )
         {
-            // Return null if the movie already exists
-            foreach (var _movies in GetAll())
-            {
-                if (_movies.Title == movie.Title)
-                    return null;
-            };
-
-            var newMovie = CopyMovie(movie);
+            var newMovie = Clone(movie);
+            newMovie.Id = _id++;
             _movies.Add(newMovie);
 
-            if (newMovie.Id <= 0)
-                newMovie.Id = _nextId++;
-            else if (newMovie.Id >= _nextId)
-                _nextId = newMovie.Id + 1;
-
-            return CopyMovie(newMovie);
+            return Clone(newMovie);
         }
+
+        /// <summary>Finds a movie by its title.</summary>
+        /// <param name="title">The title to find.</param>
+        /// <returns>The movie, if any.</returns>
+        protected override Movie FindByTitleCore( string title )
+        {
+            return _movies.FirstOrDefault(m => String.Compare(m.Title, title, true) == 0);
+        }
+
 
         /// <summary>Get a specific movie.</summary>
         /// <returns>The movie, if it exists.</returns>
@@ -35,7 +34,7 @@ namespace MovieLib.Data.Memory
         {
             var movie = FindMovie(id);
 
-            return (movie != null) ? CopyMovie(movie) : throw new Exception("Movie not in memory."); 
+            return Clone(movie); 
         }
 
         /// <summary>Get all movies.</summary>
@@ -43,58 +42,66 @@ namespace MovieLib.Data.Memory
         protected override IEnumerable<Movie> GetAllCore ()
         {
             return from item in _movies
-                   select CopyMovie(item);
+                   select Clone(item);
         }
 
         /// <summary>Removes the movie.</summary>
         /// <param name="id">The movie to remove.</param>
         protected override void RemoveCore( int id )
         {
-            var movie = FindMovie(id);
-            if (movie != null)
-                _movies.Remove(movie);
+            var exisiting = FindMovie(id);
+            if (exisiting != null)
+                _movies.Remove(exisiting);
         }
 
         /// <summary>Updates a movie.</summary>
         /// <param name="movie">The movie to update</param>
         /// <returns>The updated movie.</returns>
-        protected override Movie UpdateCore( Movie existing, Movie newMovie )
+        protected override Movie UpdateCore( Movie movie )
         {
-            existing = FindMovie(newMovie.Id);
-            _movies.Remove(existing);
+            var existing = FindMovie(movie.Id);
+            if (existing == null)
+                throw new ArgumentException("Movie not found.", nameof(movie));
 
-            var copyMovie = CopyMovie(newMovie);
-            _movies.Add(copyMovie);
-
-            return CopyMovie(newMovie);
+            Copy(existing, movie);
+            
+            return Clone(existing);
         }
-        
+
+        #region Private Members
         // Copies one movie to another
-        private Movie CopyMovie ( Movie movie)
+        private Movie Clone( Movie movie )
         {
             if (movie == null)
                 return null;
 
-            var newMovie = new Movie() {
-                Id = movie.Id,
-                Title = movie.Title,
-                Description = movie.Description,
-                Length = movie.Length,
-                IsOwned = movie.IsOwned
-            };
+            var target = new Movie();
 
-            return newMovie; 
+            Copy(target, movie);
+            target.Id = movie.Id;
+
+            return target;
+        }
+
+        // Updates a target with the values from the source, except the Id
+        private void Copy( Movie target, Movie source )
+        {
+            target.Title = source.Title;
+            target.Description = source.Description;
+            target.IsOwned = source.IsOwned;
+            target.Length = source.Length;
         }
 
         // Find a movie by ID
-        private Movie FindMovie ( int id )
+        private Movie FindMovie( int id )
         {
-            return (from movie in _movies
-                    where movie.Id == id
-                    select movie).FirstOrDefault(); 
+            return _movies.FirstOrDefault(m => m.Id == id);
         }
 
         private List<Movie> _movies = new List<Movie>();
-        private int _nextId = 1; 
+        private int _id = 1;
+
+        #endregion
+
     }
 }

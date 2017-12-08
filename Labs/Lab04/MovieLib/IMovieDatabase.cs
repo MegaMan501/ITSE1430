@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
-
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MovieLib
 {
@@ -11,6 +14,7 @@ namespace MovieLib
         /// <returns>The newly added movie.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="movie"/> is null.</exception>
         /// <exception cref="ValidationException"><paramref name="movie"/> is invalid.</exception>
+        /// <exception cref="ArgumentException">A movie with the same title already exists.</exception>
         Movie Add( Movie movie );
 
         /// <summary>Get a specific movie from the database.</summary>
@@ -23,10 +27,14 @@ namespace MovieLib
         /// <returns>An enumerable list of movies</returns>
         IEnumerable<Movie> GetAll();
 
-        /// <summary>Removes a specific movie from database.</summary>
-        /// <param name="id">The unique ID of the movie.</param>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="id"/> must be greater than or equal to 0.</exception>
-        void Remove( int id );
+        /// <summary>Removes a movie.</summary>
+        /// <param name="id">The ID of the movie.</param>
+        /// <returns><see langword="true"/> if successful or <see langword="false"/> otherwise.</returns>
+        /// <remarks>
+        /// If the movie does not exist then nothing happens.
+        /// </remarks>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="id"/> is less than or equal to zero.</exception>
+        bool Remove( int id );
 
         /// <summary>Updates a movie in the database</summary>
         /// <param name="movie">The updated movie information.</param>
@@ -35,6 +43,5 @@ namespace MovieLib
         /// <exception cref="ValidationException"><paramref name="movie"/> is invalid.</exception>
         /// <exception cref="Exception">Product not found.</exception>
         Movie Update( Movie movie );
-
     }
 }
