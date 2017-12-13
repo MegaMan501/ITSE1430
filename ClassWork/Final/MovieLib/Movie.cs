@@ -18,7 +18,7 @@ namespace MovieLib
         public string Description
         {
             get { return _description ?? ""; }
-            set { _description = value?.Trim(); } //TODO: 8 - Before: set { _description = value; } After: set { _description = value?.Trim(); }
+            set { _description = value?.Trim(); } //TODO: 08 - Before: set { _description = value; } After: set { _description = value?.Trim(); }
         }
 
         /// <summary>Determines if the movie is owned or not.</summary>
@@ -29,14 +29,14 @@ namespace MovieLib
 
         /// <summary>Gets or sets the movie rating.</summary>
         public Rating Rating { get; set; }
-
+        
         public int ReleaseYear { get; set; }
 
         /// <summary>Gets or sets the title.</summary>
         public string Title
         {
             get { return _title ?? ""; }
-            set { _title = value?.Trim(); } //TODO: 7 - Before: set { _title = value; } After: set { _title = value?.Trim(); }
+            set { _title = value?.Trim(); } //TODO: 07 - Before: set { _title = value; } After: set { _title = value?.Trim(); }
         }
 
         /// <summary>Validates the object.</summary>

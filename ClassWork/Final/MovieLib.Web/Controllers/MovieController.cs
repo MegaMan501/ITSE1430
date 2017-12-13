@@ -52,7 +52,7 @@ namespace MovieLib.Web.Controllers
         }
 
         public ActionResult Delete ( int id )
-        {// TODO: 5 - Redo the view for Delete to add additional fields
+        {// TODO: 05 - Redo the view for Delete to add additional fields
             var movie = _database.Get(id);
             if (movie == null)
                 return HttpNotFound();
@@ -64,7 +64,7 @@ namespace MovieLib.Web.Controllers
         public ActionResult Delete ( MovieViewModel model )
         {
             
-            // TODO: 4 - Add Try Catch to delete
+            // TODO: 04 - Add Try Catch to delete
             try
             {
                 _database.Remove(model.Id);
