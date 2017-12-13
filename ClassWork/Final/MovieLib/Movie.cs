@@ -1,6 +1,7 @@
 ﻿/*
- * ITSE 1430
- * Sample implementation
+ * ITSE1430
+ * Mohamed Rahaman
+ * December 13, 2017
  */
 using System;
 using System.Collections.Generic;

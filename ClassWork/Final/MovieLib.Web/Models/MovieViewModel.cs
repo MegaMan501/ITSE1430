@@ -1,6 +1,7 @@
 ﻿/*
- * ITSE 1430
- * Sample implementation
+ * ITSE1430
+ * Mohamed Rahaman
+ * December 13, 2017
  */
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace MovieLib.Web.Models
         public int Id { get; set; }
 
         [Required(AllowEmptyStrings = false)]
+        [StringLength(100, MinimumLength = 2)]
         public string Title { get; set; }
 
         public string Description { get; set; }
@@ -28,6 +30,7 @@ namespace MovieLib.Web.Models
         public Rating Rating { get; set; }
 
         [Display(Name = "Release Year")]
+        [Range(1900, 2100)]
         public int ReleaseYear { get; set; }
 
         public IEnumerable<ValidationResult> Validate ( ValidationContext validationContext ) => Enumerable.Empty<ValidationResult>();        

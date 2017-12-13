@@ -1,6 +1,7 @@
 ﻿/*
- * ITSE 1430
- * Sample implementation
+ * ITSE1430
+ * Mohamed Rahaman
+ * December 13, 2017
  */
 using System;
 using System.Collections.Generic;
@@ -63,9 +64,17 @@ namespace MovieLib.Web.Controllers
         [HttpPost]
         public ActionResult Delete ( MovieViewModel model )
         {
-            _database.Remove(model.Id);
+            try
+            {
+                _database.Remove(model.Id);
+                return RedirectToAction("List");
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("", e.Message);
+            };
 
-            return RedirectToAction("List");
+            return View(model);
         }
 
         public ActionResult Edit ( int id )
@@ -99,6 +108,7 @@ namespace MovieLib.Web.Controllers
         public ActionResult List()
         {
             var movies = from m in _database.GetAll()
+                         orderby m.Title ascending
                          select m;
             
             return View(movies.ToViewModel());

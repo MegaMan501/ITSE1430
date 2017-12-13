@@ -1,6 +1,7 @@
 ﻿/*
- * ITSE 1430
- * Sample implementation
+ * ITSE1430
+ * Mohamed Rahaman
+ * December 13, 2017
  */
 using System;
 using System.Collections.Generic;
@@ -30,10 +31,10 @@ namespace MovieLib.Web.Models
             {
                 Id = source.Id,
                 Title = source.Title,
-
                 Description = source.Description,
                 Length = source.Length,
                 IsOwned = source.IsOwned,
+                Rating = source.Rating,
                 ReleaseYear = source.ReleaseYear
             };
         }
@@ -47,10 +48,10 @@ namespace MovieLib.Web.Models
             {
                 Id = source.Id,
                 Title = source.Title,
-
                 Description = source.Description,
                 Length = source.Length,
                 IsOwned = source.IsOwned,
+                Rating = source.Rating,
                 ReleaseYear = source.ReleaseYear
             };
         }
