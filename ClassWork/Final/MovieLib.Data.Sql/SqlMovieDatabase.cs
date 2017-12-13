@@ -27,7 +27,7 @@ namespace MovieLib.Data.Sql
         /// <summary>Adds a movie.</summary>
         /// <param name="movie">The movie to add.</param>
         /// <returns>The added movie.</returns>
-        protected override Movie AddCore ( Movie movie ) // TODO: 02 - protected Movie AddCore ( Movie movie ) {} should be protected override Movie AddCore ( Movie movie ) {}
+        protected Movie AddCore ( Movie movie )
         {
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -82,6 +82,7 @@ namespace MovieLib.Data.Sql
                 var cmd = conn.CreateStoredProcedureCommand("GetAllMovies");
 
                 conn.Open();
+
                 return cmd.ExecuteReaderWithResults(ReadMovie);
             };
         }
@@ -126,8 +127,9 @@ namespace MovieLib.Data.Sql
         #region Private Members
 
         private Movie ReadMovie ( DbDataReader reader )
-        {   // TODO: 03 - Recreate Database, the fields are different on this implementation vs the other movieDataBase
-            return new Movie() {
+        {
+            return new Movie()
+            {
                 Id = reader.GetInt32(0),
                 Title = reader.GetString(1),
                 Description = reader.GetString(2),

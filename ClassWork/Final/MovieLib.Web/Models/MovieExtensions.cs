@@ -34,7 +34,6 @@ namespace MovieLib.Web.Models
                 Description = source.Description,
                 Length = source.Length,
                 IsOwned = source.IsOwned,
-                Rating = source.Rating, //TODO: 09 - Missing: Rating = source.Rating,
                 ReleaseYear = source.ReleaseYear
             };
         }
@@ -52,7 +51,6 @@ namespace MovieLib.Web.Models
                 Description = source.Description,
                 Length = source.Length,
                 IsOwned = source.IsOwned,
-                Rating = source.Rating, //TODO: 10 - Missing: Rating = source.Rating,
                 ReleaseYear = source.ReleaseYear
             };
         }

@@ -21,6 +21,6 @@ namespace MovieLib
         PG13,
 
         /// <summary>Restricted</summary>
-        R
+        R,
     }
 }
